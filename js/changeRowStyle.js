@@ -54,6 +54,56 @@ function addClass(elem,value){
     }
 }
 
+//显示缩略语具体内容函数
+function displayAbbr(){
+    if(!document.getElementsByTagName || !document.createElement || !document.createTextNode) return false;
+
+    var aAbbr = document.getElementsByTagName("abbr");
+
+    if (aAbbr.length<1) return false;
+    //定义数组存储查找结果；
+    var def = new Array();
+    for(var i=0; i<aAbbr.length; i++){
+        //这是IE6的一个bug，下面的语句表示，当前元素如果没有子节点，就退出本次循环，立即执行下一次循环。
+        if(aAbbr[i].childNodes.length < 1) continue;
+        var Title = aAbbr[i].firstChild.nodeValue;
+
+        var Title_value = aAbbr[i].getAttribute("title");
+
+        def[Title] = Title_value;//一个title对应一个缩略语
+
+    }
+    //创建定义列表dl，来承载title值和缩略语
+    var dlist = document.createElement("dl");
+    for (Title in def){
+        var Title_value = def[Title];
+
+        var dtitle = document.createElement("dt");
+        var dtitle_text = document.createTextNode(Title);
+        dtitle.appendChild(dtitle_text);
+
+        var ddesc = document.createElement("dd");
+        var ddesc_text = document.createTextNode(Title_value);
+        ddesc.appendChild(ddesc_text);
+
+        dlist.appendChild(dtitle);
+        dlist.appendChild(ddesc);
+    }
+    if(dlist.childNodes.length < 1) return false;
+    //创建标题
+    var oH2 = document.createElement("h2");
+    var H2_text = document.createTextNode("缩略语列表");
+    oH2.appendChild(H2_text);
+
+    //var oBody = document.getElementsByTagName("body")[0];
+    //把标题添加到页面主体
+    document.body.appendChild(oH2);
+    //把定义列表添加到页面主体
+    document.body.appendChild(dlist);
+
+}
+
+
 /*公共函数*/
 function addonloadEvent(func){
     var oldonload = window.onload;
@@ -71,4 +121,5 @@ function addonloadEvent(func){
 /*页面加载完成后，执行多个函数*/
 addonloadEvent(stripeTables);
 addonloadEvent(fontStyle);
+addonloadEvent(displayAbbr);
 
